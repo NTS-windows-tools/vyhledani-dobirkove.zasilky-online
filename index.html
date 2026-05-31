@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Systémové hlášení</title>
+    <style>
+        /* Základní reset a nastavení pro profesionální vzhled */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Společná třída pro všechny "stránky", aby se daly snadno skrývat/ukazovat */
+        .page-view {
+            display: none;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* --- STRÁNKA A : KROK 1 --- */
+        #page-a-step-1 {
+            background-color: #ffffff;
+        }
+
+        .tiny-text {
+            font-size: 8px; /* Extrémně malé, ale na hranici čitelnosti */
+            color: #888;
+            white-space: nowrap; /* Zaručí, že text bude vždy na jednom řádku */
+        }
+
+        /* --- STRÁNKA A : KROK 2 --- */
+        #page-a-step-2 {
+            background: linear-gradient(135deg, #f0f4f8 0%, #ffffff 100%);
+            flex-direction: column;
+        }
+
+        .content-box {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .company-name {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .main-heading {
+            font-size: 1.8rem;
+            color: #1e293b;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .sub-heading {
+            font-size: 1.2rem;
+            color: #ef4444; /* Decentní červená pro upozornění */
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .square-image {
+            width: 100%;
+            max-width: 250px;
+            aspect-ratio: 1 / 1; /* Vynutí čtvercový poměr stran */
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* --- STRÁNKA B : VARIANTA A (Před 10. 7. 2026) --- */
+        #page-b-a {
+            background-color: #f8fafc;
+        }
+
+        .loading-text {
+            font-size: 2rem;
+            color: #0f172a;
+            font-weight: 300;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* --- STRÁNKA B : VARIANTA B (Po 10. 7. 2026) --- */
+        #page-b-b {
+            background-color: #1e40af; /* Profesionální tmavě modrá */
+        }
+
+        .info-text {
+            font-size: 1.5rem;
+            color: #ffffff;
+            font-weight: 400;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        /* Responzivita pro mobilní telefony */
+        @media (max-width: 600px) {
+            .main-heading { font-size: 1.5rem; }
+            .sub-heading { font-size: 1rem; }
+            .loading-text { font-size: 1.5rem; }
+            .info-text { font-size: 1.2rem; }
+            .content-box { padding: 30px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="page-a-step-1" class="page-view">
+        <p class="tiny-text">Vyskytla se chyba: Vaše jurisdikce není v povoleném rozsahu!</p>
+    </div>
+
+    <div id="page-a-step-2" class="page-view">
+        <div class="content-box">
+            <div class="company-name">New Technology Systems, Rudolfský Software</div>
+            <h1 class="main-heading">Tato služba není ve Vaší jurisdikci podporována.</h1>
+            <div class="sub-heading">Geoblocking</div>
+            <img src="obrazek.png" alt="Omezení jurisdikce" class="square-image" onerror="this.style.display='none'; alert('Obrázek obrazek.png nebyl nalezen.');">
+        </div>
+    </div>
+
+    <div id="page-b-a" class="page-view">
+        <h1 class="loading-text">Byla nalezena jedna zásilka. Probíhá přesměrování...</h1>
+    </div>
+
+    <div id="page-b-b" class="page-view">
+        <h1 class="info-text">Aktuálně nejsou evidovány žádné dobírkové zásilky.</h1>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const STORAGE_KEY = 'nts_visit_counter';
+            let currentCount = localStorage.getItem(STORAGE_KEY);
+
+            // Logika počítadla a rozhodování
+            if (currentCount === null) {
+                // První načtení
+                localStorage.setItem(STORAGE_KEY, '1');
+                executePageA();
+            } else if (currentCount === '1') {
+                // Druhé načtení
+                localStorage.setItem(STORAGE_KEY, '2');
+                executePageA();
+            } else if (currentCount === '2') {
+                // Třetí načtení
+                localStorage.removeItem(STORAGE_KEY); // Čistý štít
+                executePageB();
+            } else {
+                // Bezpečnostní pojistka, pokud by v paměti bylo něco neočekávaného
+                localStorage.setItem(STORAGE_KEY, '1');
+                executePageA();
+            }
+        });
+
+        // Pomocná funkce pro zobrazení konkrétního divu
+        function showDiv(divId) {
+            // Skryje všechny pohledy
+            const views = document.querySelectorAll('.page-view');
+            views.forEach(view => view.style.display = 'none');
+            // Zobrazí požadovaný
+            document.getElementById(divId).style.display = 'flex';
+        }
+
+        // Průběh Stránky A
+        function executePageA() {
+            showDiv('page-a-step-1');
+            
+            // Počká 1.5 vteřiny a přepne na Krok 2
+            setTimeout(() => {
+                showDiv('page-a-step-2');
+            }, 1500);
+        }
+
+        // Průběh Stránky B
+        function executePageB() {
+            // Cílové datum: 10. července 2026, 00:00:00 místního času
+            const targetDate = new Date(2026, 6, 10, 0, 0, 0); // Měsíce se v JS indexují od 0 (6 = červenec)
+            const currentDate = new Date();
+
+            if (currentDate < targetDate) {
+                // VARIANTA A: Ještě nebylo 10.7.2026
+                showDiv('page-b-a');
+                
+                // Počká 4 vteřiny a přesměruje
+                setTimeout(() => {
+                    window.location.href = "https://nts-windows-tools.github.io/zasilkovacka2-package-dobirkaCOD/";
+                }, 4000);
+            } else {
+                // VARIANTA B: Je 10.7.2026 nebo později
+                showDiv('page-b-b');
+            }
+        }
+    </script>
+</body>
+</html>
