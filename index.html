@@ -78,8 +78,44 @@
         .sub-heading {
             font-size: 1.2rem;
             color: #ef4444; /* Decentní červená pro upozornění */
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: 500;
+        }
+
+        /* Nové styly pro detail chyby */
+        .error-divider {
+            border: none;
+            height: 1px;
+            background-color: #e2e8f0;
+            margin: 0 0 20px 0;
+        }
+
+        .error-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .error-description {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Styly pro informace o podpoře a dynamické ID */
+        .support-label {
+            color: #1e3a8a; /* Tmavě modrá */
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .support-text {
+            font-size: 0.95rem;
+            color: #334155;
+            margin-bottom: 25px;
         }
 
         .square-image {
@@ -142,9 +178,17 @@
 
     <div id="page-a-step-2" class="page-view">
         <div class="content-box">
-            <div class="company-name">New Technology Systems, Rudolfský Software</div>
-            <h1 class="main-heading">Tato služba není ve Vaší jurisdikci podporována.</h1>
+            <div class="company-name">New Technology System, Rudolfský Software</div>
+            <h1 class="main-heading">Tato služba není ve vaší jurisdikci podporována.</h1>
             <div class="sub-heading">Geoblocking</div>
+            
+            <hr class="error-divider">
+            <h2 class="error-title">Chyba: 564</h2>
+            <p class="error-description">Přenos parametrů při přepisu URL selhal. PLACEHOLDER prázdného místa se nepodařilo nahradit AUTOINCREMENT. Zkuste to prosím znovu, nebo se ujistěte, že je ve vašem regionu tahle služba povolena.</p>
+            
+            <p class="support-label">Při volání podpory sdělte tyto informace:</p>
+            <p class="support-text">Error_ID: <span id="generated-error-id">------</span></p>
+            
             <img src="obrazek.png" alt="Omezení jurisdikce" class="square-image" onerror="this.style.display='none'; alert('Obrázek obrazek.png nebyl nalezen.');">
         </div>
     </div>
@@ -159,6 +203,19 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Generátor náhodného 12místného Error ID ve formátu XXXXXX-XXXXXX
+            const idContainer = document.getElementById('generated-error-id');
+            if (idContainer) {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let part1 = '';
+                let part2 = '';
+                for (let i = 0; i < 6; i++) {
+                    part1 += chars.charAt(Math.floor(Math.random() * chars.length));
+                    part2 += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                idContainer.textContent = `${part1}-${part2}`;
+            }
+
             const STORAGE_KEY = 'nts_visit_counter';
             let currentCount = localStorage.getItem(STORAGE_KEY);
 
